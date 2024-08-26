@@ -8,6 +8,7 @@ const AttendanceComponent = () => {
   const [geoAllowed, setGeoAllowed] = useState(false);
   const [message, setMessage] = useState('');
   const [messageColor, setMessageColor] = useState('');
+  const [loading, setLoading] = useState(false); // Estado para el loading
 
   useEffect(() => {
     if (geoAllowed && navigator.geolocation) {
@@ -47,16 +48,19 @@ const AttendanceComponent = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setLoading(true); // Inicia el loading
 
     if (!employeeName) {
       setMessage('Por favor, completa el nombre.');
       setMessageColor('text-red-500');
+      setLoading(false); // Detiene el loading
       return;
     }
 
     if (!geoAllowed) {
       setMessage('Por favor, permite la geolocalización antes de enviar.');
       setMessageColor('text-red-500');
+      setLoading(false); // Detiene el loading
       return;
     }
 
@@ -64,6 +68,7 @@ const AttendanceComponent = () => {
     if (submissionCount >= 2) {
       setMessage('Solo puedes enviar el formulario dos veces al día.');
       setMessageColor('text-red-500');
+      setLoading(false); // Detiene el loading
       return;
     }
 
@@ -98,11 +103,23 @@ const AttendanceComponent = () => {
         setMessageColor('text-green-500');
         setEmployeeName('');
         setActionType('Ingreso');
+        setLoading(false); // Detiene el loading
+
+        // Temporizador para borrar el mensaje después de 5 segundos
+        setTimeout(() => {
+          setMessage('');
+        }, 5000);
       })
       .catch((error) => {
         console.error('Error:', error);
         setMessage(`Error al enviar el presentismo: ${error.message}`);
         setMessageColor('text-red-500');
+        setLoading(false); // Detiene el loading
+
+        // Temporizador para borrar el mensaje después de 5 segundos
+        setTimeout(() => {
+          setMessage('');
+        }, 4000);
       });
   };
 
@@ -140,8 +157,8 @@ const AttendanceComponent = () => {
           />
           <label htmlFor="geo-allowed" className="text-sm">Permitir geolocalización</label>
         </div>
-        <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-          Enviar
+        <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" disabled={loading}>
+          {loading ? 'Cargando...' : 'Enviar'}
         </button>
         <div className='flex justify-center'>
           {message && <p className={`mt-4 ${messageColor}`}>{message}</p>}
