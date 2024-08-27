@@ -128,19 +128,25 @@ const AttendanceComponent = () => {
       <h1 className="text-4xl mb-5 text-center">Employee Attendance</h1>
       <form onSubmit={handleSubmit} className="bg-gray-800 p-6 rounded shadow-lg w-full max-w-md">
         <label htmlFor="employee-name" className="block text-sm font-medium mb-2">Nombre:</label>
-        <input
-          type="text"
+        <select
           id="employee-name"
           value={employeeName}
-          onChange={(e) => setEmployeeName(e.target.value)}
+          onChange={(e) => setEmployeeName(e.target.value)}  // Cambiado de actionType a employeeName
           required
           className="w-full p-2 mb-4 bg-gray-700 text-white rounded"
-        />
+        >
+          <option value="">Seleccionar Nombre</option> {/* Añadido para evitar un valor vacío */}
+          <option value="Joel">Joel</option>
+          <option value="Tomas">Tomas</option>
+          <option value="Rocio">Rocio</option>
+          <option value="Brenda">Brenda</option>
+        </select>
+
         <label htmlFor="action-type" className="block text-sm font-medium mb-2">Acción:</label>
         <select
           id="action-type"
           value={actionType}
-          onChange={(e) => setActionType(e.target.value)}
+          onChange={(e) => setActionType(e.target.value)}  // Mantener el estado de actionType aquí
           required
           className="w-full p-2 mb-4 bg-gray-700 text-white rounded"
         >
